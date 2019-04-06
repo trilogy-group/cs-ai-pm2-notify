@@ -9,9 +9,12 @@ var async = require('async')
 var util = require('util')
 var p = require('path')
 
-var transporter = nodemailer.createTransport(require('nodemailer-smtp-transport')(config.smtp))
+const emailConfig = config.smtp;
 
-transporter.use('compile', markdown({useEmbeddedImages: true}))
+const transporter = require('mailgun-js')({
+    apiKey: emailConfig.apiKey,
+    domain: emailConfig.domain
+}).messages();
 
 var queue = []
 var timeout = null
@@ -41,17 +44,18 @@ function sendMail(opts) {
     from: opts.from || config.mail.from,
     to: opts.to ? opts.to : config.mail.to,
     subject: opts.subject,
-    markdown: opts.text,
+    html: opts.text,
     attachments: opts.attachments || []
   }
 
-  transporter.sendMail(opts, function(err, info) {
-    if(err) {
-      console.error(err)
-    }
+    transporter
+        .send(opts, function(err, info) {
+            if (err) {
+                console.error(err)
+            }
 
-    console.log('Mail sent', info)
-  })
+            console.log('Mail sent', info)
+        })
 }
 
 /**
@@ -104,7 +108,7 @@ function processQueue() {
     text: text,
     attachments: attachments
   })
-    
+
   //reset queue
   queue.length = 0
 
