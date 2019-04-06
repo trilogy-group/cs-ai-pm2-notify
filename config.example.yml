@@ -1,10 +1,11 @@
 mail:
-    from: "me@example.com"
-    to: "you@example.com"
+    from: "email@example.com"
+    to: "email@example.com"
 # see https://github.com/andris9/nodemailer-smtp-transport#usage
 smtp:
-    host: "smtp.gmail.com"
-    port: 25
+  apiKey : ""
+  domain : ""
+  fromEmail : ""
 # Events list:
 # - restart
 # - delete
@@ -25,4 +26,4 @@ polling: 5000
 #if events are sent continuously, an email will be sent after 5 minutes anyway
 max_polling_time: 300000
 #attach your process logs to the email
-attach_logs: true 
+attach_logs: true
